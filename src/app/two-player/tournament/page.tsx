@@ -40,31 +40,30 @@ const TournamentManager = () => {
     whoStartFirst.current = currentPlayer;
   }, [currentGame, state.whoStarts, previousWinner]);
 
+
   const handleGameEnd = (winner: Player) => {
+    let newScores = { ...scores };
+
     if (winner) {
-      setScores((prev) => ({ ...prev, [winner]: prev[winner] + 1 }));
+      newScores[winner] += 1;
+      setScores(newScores);
       setPreviousWinner(winner);
     }
 
-    // Check if tournament has ended
     if (currentGame === state.numberOfGames) {
       let resultMessage = "";
-
-      // Determine the winner or draw message
-      if (scores.Player1 > scores.Player2) {
-        resultMessage = "Player1 wins the tournament!";
-        setTournamentWinner(`Congratulations, ${state.player1} You won Game!`);
-      } else if (scores.Player2 > scores.Player1) {
-        resultMessage = "Player2 wins the tournament!";
-        setTournamentWinner(`Congratulations, ${state.player2} You won Game!`);
+      if (newScores.Player1 > newScores.Player2) {
+        resultMessage = `Player1 wins the tournament!`;
+        setTournamentWinner(`Congratulations, ${state.player1}, You won!`);
+      } else if (newScores.Player2 > newScores.Player1) {
+        resultMessage = `Player2 wins the tournament!`;
+        setTournamentWinner(`Congratulations, ${state.player2}, You won!`);
       } else {
-        resultMessage = "The tournament is a draw!";
-        setTournamentWinner("Draw");
+        resultMessage = `The tournament is a draw!`;
+        setTournamentWinner(`It's a Draw between ${state.player1} and ${state.player2}!`);
       }
-
-      alert(resultMessage); // Show the result message
+      alert(resultMessage);
     } else {
-      // Move to next game if tournament isn't over
       setCurrentGame((prev) => prev + 1);
     }
   };
